@@ -1,10 +1,11 @@
-from flask import Flask,flash
+from flask import Flask,flash,session,redirect
 import flask
 
 from queries import list_names
 from web_app import app,db
 from models.model import USER
 from sqlalchemy.exc import IntegrityError
+import hashlib
 
 
 @app.route("/testing")
@@ -27,10 +28,12 @@ def signup():
 @app.route("/signup_post", methods = ["POST"])
 def post_signup():
     try:
+        password=flask.request.form["password"]
+        hashed_password=hashlib.sha256(password.encode('utf-8')).hexdigest()
         user_records={
         'user_name' :flask.request.form["username"],
         'user_email':flask.request.form["email_signup"],
-        'password':flask.request.form["password"],
+        'password':hashed_password,
         'otp':"",
         }
 
@@ -38,21 +41,33 @@ def post_signup():
         db.session.add(user)
         db.session.commit()
         
-        return flask.render_template("Welcomepage.html")
+        return flask.render_template("login.html")
     
     except IntegrityError:
         flash("The email you entered is already available please go to login. Please choose new email",'Wrong_OTP')
-        return flask.render_template("signup.html")
+    return flask.render_template("signup.html")
 
 
+@app.route("/login")
+def login():
+    print('Get----')
+    return flask.render_template("login.html",action="/login_post")
 
 
-
-
-
-
-
-
+@app.route("/login_post", methods = ["POST"])
+def post_login():
+    user_email=flask.request.form["email_signup"]
+    password =flask.request.form["password"]
+    hashed_password=hashlib.sha256(password.encode('utf-8')).hexdigest()
+    user = USER.query.filter_by(user_email = user_email).first()
+    if user_email and user.password == hashed_password:
+        session['current_user']={
+            "username":user.user_name,
+            "useremail":user.user_email,
+            "password":user.password
+        }
+        return flask.render_template("Welcomepage.html")
+    return flask.render_template('login.html')
 
 
 
