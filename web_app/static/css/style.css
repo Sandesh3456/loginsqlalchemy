@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: hsl(22, 89%, 45%);
+}
+.container {
+    margin: 100px;
+    padding: 40px 40px 40px 40px;
+    border-radius: 15px 15px 15px 15px;
+    background-color: hsl(0, 0%, 100%);
+}
+button{
+    background-color:hsl(4, 100%, 67%);
+    display:flex;
+    justify-content:center;
+    margin-top:30px;
+    padding:10px;
+    border: none;
+    align-items:center;
+    color:white;
+    border-radius:4px;
+    width:100%;
+    cursor:pointer;
+}
+
+button:hover {
+    background-color: hsl(235, 18%, 26%);
+}
+
+a:link, a:visited {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    width:80%;
+    border-radius:10px;
+  }
+  
+  a:hover, a:active {
+    background-color: red;
+  }
+  

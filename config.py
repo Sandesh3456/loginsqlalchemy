@@ -1,0 +1,1 @@
+DATABASE_URI="postgresql://postgres:sandesh@localhost:5432/userdatabase"

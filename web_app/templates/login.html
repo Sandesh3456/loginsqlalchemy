@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Login Form</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+        <link rel="stylesheet" href="/static/css/style.css">
+    </head>
+    <body>
+        <div class="back"> 
+        <div class="container">
+        <form method="POST" action={{action}}>
+            <label>Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>    
+            <input type="text" name="email_signup" id="email" class="email" value="" required><br><br>
+            Password : <input type="password" name="password" class="pass" id="pwd1" value = "" required>
+            <br>
+            <br>
+            <button type="submit">Submit</button><br><br> 
+            <a href = "/forgot">Forgot Password</a><br><br>
+            <a href = "/signup">Signup</a>
+        </form>
+        </div>
+        </div>
