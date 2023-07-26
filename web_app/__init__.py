@@ -1,10 +1,16 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import config
+from flask_mail import Mail,Message
+import config as config
 
 app = Flask(
     __name__
 )
+mail = Mail(app)
+
+
+
+
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 # app.config.from_pyfile("config.py")
 
