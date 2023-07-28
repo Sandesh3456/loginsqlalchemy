@@ -6,4 +6,5 @@ def list_names():
     row = db.session.execute(sql)
     return row
 
+
 list_names()
