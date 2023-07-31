@@ -10,6 +10,7 @@ import secrets
 from flask_mail import Mail, Message
 from datetime import timedelta
 import config as config
+from functools import wraps
 
 
 app.config['MAIL_SERVER'] = config.MAIL_SERVER
@@ -33,7 +34,19 @@ def make_session_permanent():
     app.permanent_session_lifetime = timedelta(minutes=30)
 
 
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'useremail' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("You need to login first")
+            return redirect('/login')
+    return wrap
+
+
 @app.route("/signup")
+@login_required
 def signup():
     return flask.render_template("signup.html")
 
@@ -57,14 +70,13 @@ def post_signup():
             return redirect("/login")
 
     except IntegrityError:
-        flash("The email you entered is already available please go to login. Please choose new email", 'Wrong_Email')
+        flash("The email you entered is already available.", 'Wrong_Email')
     return flask.render_template("signup.html")
 
 
 @app.route("/")
 @app.route("/login")
 def login():
-    print('Get----')
     return flask.render_template("login.html")
 
 
@@ -85,6 +97,7 @@ def post_login():
 
 
 @app.route("/forgot")
+@login_required
 def forgot():
     return flask.render_template("forgot.html")
 
@@ -95,17 +108,20 @@ def post_forgot():
     user = USER.query.filter_by(user_email=user_email).first()
     if user.user_email == user_email:
         otp = secrets.token_hex(8)
-        session['forgot_password'] = {'user_id': user.user_id, 'email': user.user_email, 'user_name': user.user_name, 'otp': otp}
-        print(session)
+        session['forgot_password'] = {'user_id': user.user_id,
+                                      'email': user.user_email,
+                                      'user_name': user.user_name,
+                                      'otp': otp}
         receiver = []
         receiver.append(user_email)
         msg = Message(subject='Hello ! Reset Your Password', sender='sandeshpathak282@gmail.com', recipients=receiver)
-        msg.body = 'Your one time password is {}.Please use the one time password within one minutes'.format(otp)
+        msg.body = 'Your one time password is {}'.format(otp)
         mail.send(msg)
         return redirect('/otp')
 
 
 @app.route("/otp")
+@login_required
 def otp():
     return flask.render_template("otp.html")
 
@@ -118,18 +134,10 @@ def otp_post():
     new_password = flask.request.form["new_password"]
     confirm_new_password = flask.request.form["confirm_new_password"]
     otp_data = session.get('forgot_password', {})
-    print(".......................................")
     if otp_data and 'otp' in otp_data and 'email' in otp_data:
         old_otp = otp_data['otp']
         stored_email = otp_data['email']
-        users_name = otp_data["user_name"]
         users_id = otp_data["user_id"]
-        print(otp_data)
-        print(user_otp)
-        print(user_email)
-        print(old_otp)
-        print(stored_email)
-        print(users_name)
         if stored_email == user_email and user_otp == old_otp:
             if new_password == confirm_new_password:
                 hashed_password = hashlib.sha256(new_password.encode('utf-8')).hexdigest()
@@ -143,16 +151,18 @@ def otp_post():
                 db.session.commit()
                 return redirect("/login")
             else:
+                flash("Passwords do not match.", 'Password_dont_match')
                 return redirect("/otp")
-        # "New password and confirm password do not match. Please try again."
         else:
-        # "Email or OTP does not match, handle the error or show an error message to the user"
+            flash("Email or otp does not match", 'Email_dont_match')
             return redirect("/otp")
     else:
+        flash("OTP is wrong", 'OTP_wrong')
         return redirect("/login")
-    # "OTP data not found. Please generate a new OTP and try again."
 
 
-@app.route("/testing")
-def testing():
-    return 'a'
+@app.route("/logout")
+@login_required
+def logout():
+    session.clear()
+    return redirect('/login')

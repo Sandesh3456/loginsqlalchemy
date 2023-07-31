@@ -7,6 +7,20 @@
         <div class="back">
         <div class="container">
         <form method="POST" action="otp_post">
+        <div>
+            {% with errors = get_flashed_messages(category_filter=["OTP_wrong"]) %}
+            {% if errors %}
+            <ul>
+            {% for msg in errors %}
+            <div class="alert alert-warning alert-dismissible fade show" id ="opt_alert" role="alert">
+              <strong>{{ msg }}</strong> 
+              <br><br>
+            </div>
+            {% endfor %}
+            </ul>
+            {% endif %}
+          {% endwith %}
+        </div>
         <label>User Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
         <input type="text" name="user_name" id="user_name" value = "" required><br><br> 
         <label>User Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>

@@ -7,20 +7,6 @@
     <body>
         <div class="back"> 
         <div class="container">
-            <div>
-                {% with errors = get_flashed_messages(category_filter=["Wrong_OTP"]) %}
-                  {% if errors %}
-                  <ul>
-                  {% for msg in errors %}
-                  <div class="alert alert-warning alert-dismissible fade show" id ="opt_alert" role="alert">
-                    <strong>{{ msg }}</strong> 
-                    <br><br>
-                  </div>
-                  {% endfor %}
-                  </ul>
-                  {% endif %}
-                {% endwith %}
-              </div>
         <form method="POST" action="forgot_post">
             <label>Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>    
             <input type="text" name="email_signup" id="email" class="email" placeholder="Enter your email here" autocomplete="off" required><br><br>
