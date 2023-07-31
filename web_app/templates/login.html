@@ -9,9 +9,20 @@
         <div class="container">
         <form method="POST" action="login_post">
             <div>
-                
+                {% with errors = get_flashed_messages(category_filter=["Password_dont_match","Email_dont_match"]) %}
+                {% if errors %}
+                <ul>
+                {% for msg in errors %}
+                <div class="alert alert-warning alert-dismissible fade show" id ="opt_alert" role="alert">
+                  <strong>{{ msg }}</strong> 
+                  <br><br>
+                </div>
+                {% endfor %}
+                </ul>
+                {% endif %}
+              {% endwith %}   
             </div>
-            <label>Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>    
+            <label>Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>    
             <input type="text" name="email_signup" id="email" class="email" value="" required><br><br>
             Password : <input type="password" name="password" class="pass" id="pwd1" value = "" required>
             <br>

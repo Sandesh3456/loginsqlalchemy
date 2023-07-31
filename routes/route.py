@@ -46,7 +46,6 @@ def login_required(f):
 
 
 @app.route("/signup")
-@login_required
 def signup():
     return flask.render_template("signup.html")
 
@@ -97,9 +96,8 @@ def post_login():
 
 
 @app.route("/forgot")
-@login_required
 def forgot():
-    return flask.render_template("forgot.html")
+    return flask.render_template("forgotpassword.html")
 
 
 @app.route("/forgot_post", methods=["POST"])
@@ -121,9 +119,8 @@ def post_forgot():
 
 
 @app.route("/otp")
-@login_required
 def otp():
-    return flask.render_template("otp.html")
+    return flask.render_template("otpform.html")
 
 
 @app.route("/otp_post", methods=["POST"])
@@ -151,13 +148,16 @@ def otp_post():
                 db.session.commit()
                 return redirect("/login")
             else:
+                session.clear()
                 flash("Passwords do not match.", 'Password_dont_match')
                 return redirect("/otp")
         else:
-            flash("Email or otp does not match", 'Email_dont_match')
+            session.clear()
+            flash("Email or otp does not match", 'Credentials_dont_match')
             return redirect("/otp")
     else:
-        flash("OTP is wrong", 'OTP_wrong')
+        session.clear()
+        flash("Session Expired", 'Session_expired')
         return redirect("/login")
 
 
@@ -165,4 +165,4 @@ def otp_post():
 @login_required
 def logout():
     session.clear()
-    return redirect('/login')
+    return redirect('/')
